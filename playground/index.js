@@ -1,12 +1,23 @@
 let express = require("express");
-
+let bodyParser = require("body-parser");
+let mongoose = require("mongoose");
 let router = require("./apiRouter");
 
 //initialize
 let app = express();
 
+//bodyparser configuration
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
+app.use(bodyParser.json());
+
+//mongoose configuration
+mongoose.connect('mongodb://localhost/node-playground');
+let db = mongoose.connection;
+
 //setup server 
-var port = process.env.PORT || 8080;
+let port = process.env.PORT || 8080;
 
 //send message specified 'route'?
 app.use('/api', router);
