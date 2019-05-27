@@ -1,24 +1,23 @@
-let express = require("express");
-let bodyParser = require("body-parser");
-let mongoose = require("mongoose");
-let router = require("./apiRouter");
-let app = express();
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const router = require("./apiRouter.js");
 
-let port = process.env.PORT || 8080;
+const app = express();
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+const port = process.env.PORT || 8080;
 
-mongoose.connect("mongodb://localhost/siswaDB");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+mongoose.connect("mongodb://localhost/siswa", {
+  useNewUrlParser: true
+});
 let db = mongoose.connection;
 
 app.use('/api', router);
+app.get("/", (req, res) => res.json("Express Api"));
 
-app.get('/', (req, res) => res.send("Api"));
-
-app.listen(port, function() {
-  console.log("running", port);
+app.listen(port, () => {
+  console.log("running on ", port);
 });

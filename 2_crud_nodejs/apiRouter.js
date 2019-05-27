@@ -1,23 +1,20 @@
-let router = require("express").Router();
-let siswaController = require("./siswaController");
+const router = require("express").Router();
+const siswaController = require("./siswa.controller.js");
 
-router.get("/", function(req, res) {
+router.get("/", (req, res) => {
   res.json({
-    status: "200",
-    message: "express API"
+    message: "Halo from API"
   });
 });
 
 router
-  .route("/siswas")
+  .route("/siswa")
   .get(siswaController.getAll)
-  .post(siswaController.add);
+  .post(siswaController.create);
 
 router
-  .route("/siswa/:siswa_id")
-  .get(siswaController.getId)
-  .patch(siswaController.update)
+  .route("/siswa/:siswaId")
+  .get(siswaController.getById)
   .put(siswaController.update)
   .delete(siswaController.delete);
-
-  module.exports = router;
+module.exports = router;

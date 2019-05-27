@@ -1,32 +1,43 @@
-let express = require("express");
-let bodyParser = require("body-parser");
-let mongoose = require("mongoose");
-let router = require("./apiRouter");
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const router = require("./contact.router");
+const config = require("./config.js");
 
 //initialize
 let app = express();
 
 //bodyparser configuration
-app.use(bodyParser.urlencoded({
-    extended:true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
+);
 app.use(bodyParser.json());
 
 //mongoose configuration
-mongoose.connect('mongodb://localhost/node-playground');
-let db = mongoose.connection;
+mongoose
+  .connect(config.dbUrl, {
+    useNewUrlParser: true
+  })
+  .then(() => {
+    console.log("Successfuly connect Database");
+  })
+  .catch(err => {
+    console.log(err);
+    process.exit();
+  });
 
-//setup server 
-let port = process.env.PORT || 8080;
+//setup server
+// let port = process.env.PORT || 8080;
 
 //send message specified 'route'?
-app.use('/api', router);
+app.use("/api", router);
 
 //send message for default URL
-app.get('/', (req, res) => res.send("Hello from express"));
+app.get("/", (req, res) => res.json("Hello from express"));
 
 //launch app from specified port
-app.listen(port, function() {
-    console.log("running", port);
-})
-
+app.listen(config.serverPort, function() {
+  console.log("running on ", config.serverPort);
+});
